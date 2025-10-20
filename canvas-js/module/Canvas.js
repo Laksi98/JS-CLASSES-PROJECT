@@ -9,11 +9,7 @@ const duplicateCanvas = (canvas) => {
   duplicate.width = canvas.width;
   duplicate.height = canvas.height;
 
-  if (duplicate.width > 0 && duplicate.height > 0) {
-    context.drawImage(canvas, 0, 0);
-  } else {
-    console.warn("Canvas width or height is 0, skipping drawImage");
-  }
+  context.drawImage(canvas, 0, 0);
   return duplicate;
 };
 
