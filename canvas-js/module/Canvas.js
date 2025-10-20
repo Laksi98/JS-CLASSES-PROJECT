@@ -9,11 +9,7 @@ const duplicateCanvas = (canvas) => {
   duplicate.width = canvas.width;
   duplicate.height = canvas.height;
 
-  if (duplicate.width > 0 && duplicate.height > 0) {
-    context.drawImage(canvas, 0, 0);
-  } else {
-    console.warn("Canvas width or height is 0, skipping drawImage");
-  }
+  context.drawImage(canvas, 0, 0);
   return duplicate;
 };
 
@@ -52,8 +48,8 @@ export class CanvasJS {
   scale(input) {
     if (!this.image) throw new Error("No image loaded");
 
-    const xScale = typeof input === "number" ? input : input.x??1;
-    const yScale = typeof input === "number" ? input : input.y??1;
+    const xScale = typeof input === "number" ? input : input.x;
+    const yScale = typeof input === "number" ? input : input.y;
 
     // duplicate current canvas
     const duplicate = duplicateCanvas(this.canvas);
