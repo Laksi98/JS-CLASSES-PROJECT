@@ -48,8 +48,8 @@ export class CanvasJS {
   scale(input) {
     if (!this.image) throw new Error("No image loaded");
 
-    const xScale = typeof input === "number" ? input : input.x;
-    const yScale = typeof input === "number" ? input : input.y;
+    const xScale = typeof input === "number" ? input : input.x??1;
+    const yScale = typeof input === "number" ? input : input.y??1;
 
     // duplicate current canvas
     const duplicate = duplicateCanvas(this.canvas);
