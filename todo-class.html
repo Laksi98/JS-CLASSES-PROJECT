@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Simple Todo App</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h2>Simple Todo</h2>
+
+    <div class="box">
+      <!-- Input Fields -->
+      <input type="text" id="title" placeholder="Task title" />
+      <input type="date" id="date" />
+      <button id="addBtn">Add Task</button>
+
+      <!--Buttons -->
+      <div class="filter-btns">
+        <button id="allBtn">All</button>
+        <button id="futureBtn">Future</button>
+        <button id="expiredBtn">Expired</button>
+        <button id="completedBtn">Completed</button>
+      </div>
+
+      <!-- Task List -->
+      <ul id="taskList"></ul>
+    </div>
+
+    <script>
+      const today = new Date();
+
+      class Todo {
+        constructor() {
+          this.tasks = [];
+        }
+
+        // Add new task
+        addTask(id, title, time) {
+          this.tasks.push({ id, title, time, done: false });
+        }
+
+        // Mark a task as done
+        doneTaskById(id) {
+          const t = this.tasks.find((x) => x.id === id);
+          if (t) t.done = true;
+        }
+
+        // Show all tasks
+        getAllTasks() {
+          return this.tasks;
+        }
+
+        // Show future tasks
+        getFutureTasks() {
+          return this.tasks.filter((t) => t.time > today && !t.done);
+        }
+
+        // Show expired tasks
+        getExpiredTasks() {
+          return this.tasks.filter((t) => t.time < today && !t.done);
+        }
+
+        // Show completed tasks
+        getCompletedTasks() {
+          return this.tasks.filter((t) => t.done);
+        }
+      }
+
+      const todo = new Todo();
+
+      const list = document.getElementById("taskList");
+      const titleInput = document.getElementById("title");
+      const dateInput = document.getElementById("date");
+
+      //Add Task Button Click
+      document.getElementById("addBtn").addEventListener("click", () => {
+        const title = titleInput.value.trim();
+        const date = dateInput.value;
+
+        if (!title || !date) return alert("Please enter a title and date!");
+
+        const id = Math.random().toString(36).substring(2, 9);
+        todo.addTask(id, title, new Date(date).getTime());
+        renderList(todo.getAllTasks());
+
+        titleInput.value = "";
+        dateInput.value = "";
+      });
+
+      //Mark task as done
+      window.markDone = (id) => {
+        todo.doneTaskById(id);
+        renderList(todo.getAllTasks());
+      };
+
+      //show task list
+      function renderList(tasks) {
+        list.innerHTML = "";
+        if (tasks.length === 0) {
+          list.innerHTML = "<li>No tasks</li>";
+          return;
+        }
+
+        tasks.forEach((t) => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+          <span class="${t.done ? "done" : ""}">
+            ${t.title} (${new Date(t.time).toLocaleDateString()})
+          </span>
+          ${
+            !t.done ? `<button onclick="markDone('${t.id}')">Done</button>` : ""
+          }
+        `;
+          list.appendChild(li);
+        });
+      }
+
+      // Filter Buttons
+      document
+        .getElementById("allBtn")
+        .addEventListener("click", () => renderList(todo.getAllTasks()));
+      document
+        .getElementById("futureBtn")
+        .addEventListener("click", () => renderList(todo.getFutureTasks()));
+      document
+        .getElementById("expiredBtn")
+        .addEventListener("click", () => renderList(todo.getExpiredTasks()));
+      document
+        .getElementById("completedBtn")
+        .addEventListener("click", () => renderList(todo.getCompletedTasks()));
+
+      todo.addTask("1", "Read Book", new Date("2025-10-16").getTime());
+      todo.addTask("3", "Go for a walk", new Date("2025-10-14").getTime());
+
+      // Show all tasks -> start
+      renderList(todo.getAllTasks());
+    </script>
+  </body>
+</html>
